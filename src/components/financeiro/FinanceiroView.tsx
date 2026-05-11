@@ -10,6 +10,7 @@ const today = "2026-05-11";
 export default function FinanceiroView() {
   const { transactions, appointments, services, clients, addTransaction } = useAppData();
   const [showModal, setShowModal] = useState(false);
+  const [message, setMessage] = useState("");
   const [form, setForm] = useState({
     type: "Entrada" as TransactionType,
     category: "Servico" as TransactionCategory,
@@ -126,6 +127,14 @@ export default function FinanceiroView() {
           <form
             onSubmit={event => {
               event.preventDefault();
+              if (!form.description.trim()) {
+                setMessage("Informe a descricao do lancamento.");
+                return;
+              }
+              if (Number(form.value) <= 0) {
+                setMessage("Informe um valor maior que zero.");
+                return;
+              }
               const client = clients.find(item => item.id === form.clientId);
               addTransaction({
                 type: form.type,
@@ -136,15 +145,17 @@ export default function FinanceiroView() {
                 clientId: client?.id,
                 clientName: client?.name,
               });
+              setMessage("Lancamento salvo.");
               setShowModal(false);
             }}
-            className="relative w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-t-3xl p-6 space-y-4"
+            className="relative w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-t-3xl p-6 space-y-4 max-h-[85vh] overflow-y-auto"
           >
             <div className="flex items-center justify-between">
               <h2 className="font-bold text-lg">Novo lancamento</h2>
               <button onClick={() => setShowModal(false)}><X size={20} className="text-zinc-400" /></button>
             </div>
             <div className="space-y-3">
+              {message && <p className="text-amber-400 text-xs">{message}</p>}
               <div>
                 <label className="text-xs text-zinc-400 mb-1 block">Tipo</label>
                 <select value={form.type} onChange={e => setForm({ ...form, type: e.target.value as TransactionType })} className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-[#e91e8c]">

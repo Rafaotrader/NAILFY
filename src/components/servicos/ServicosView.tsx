@@ -18,6 +18,7 @@ export default function ServicosView() {
   const { services, upsertService } = useAppData();
   const [editing, setEditing] = useState<Service | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [message, setMessage] = useState("");
   const [form, setForm] = useState(emptyForm);
 
   function openModal(service?: Service) {
@@ -40,7 +41,16 @@ export default function ServicosView() {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!form.name.trim()) {
+      setMessage("Informe o nome do servico.");
+      return;
+    }
+    if (form.price < 0 || form.estimatedCost < 0 || form.duration <= 0 || form.suggestedReturn <= 0) {
+      setMessage("Revise preco, custo, duracao e retorno.");
+      return;
+    }
     upsertService({ ...form, id: editing?.id, active: editing?.active ?? true });
+    setMessage(editing ? "Servico atualizado." : "Servico cadastrado.");
     setShowModal(false);
     setEditing(null);
   }
@@ -92,12 +102,13 @@ export default function ServicosView() {
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-end justify-center">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowModal(false)} />
-          <form onSubmit={handleSubmit} className="relative w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-t-3xl p-6 space-y-4">
+          <form onSubmit={handleSubmit} className="relative w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-t-3xl p-6 space-y-4 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between">
               <h2 className="font-bold text-lg">{editing ? "Editar servico" : "Novo servico"}</h2>
               <button type="button" onClick={() => setShowModal(false)}><X size={20} className="text-zinc-400" /></button>
             </div>
             <div className="space-y-3">
+              {message && <p className="text-amber-400 text-xs">{message}</p>}
               <input required placeholder="Nome" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-[#e91e8c]" />
               <input placeholder="Categoria" value={form.category} onChange={e => setForm({ ...form, category: e.target.value })} className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-[#e91e8c]" />
               <div className="grid grid-cols-2 gap-3">

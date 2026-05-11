@@ -18,6 +18,7 @@ interface NewAppointmentModalProps {
 export default function NewAppointmentModal({ appointment, clients, services, defaultDate, defaultClientId, onClose, onSave }: NewAppointmentModalProps) {
   const firstClient = clients[0];
   const firstService = services[0];
+  const [message, setMessage] = useState("");
   const [form, setForm] = useState<AppointmentForm>({
     clientId: appointment?.clientId || defaultClientId || firstClient.id,
     serviceId: appointment?.serviceId || firstService.id,
@@ -51,6 +52,14 @@ export default function NewAppointmentModal({ appointment, clients, services, de
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!form.clientId || !form.serviceId || !form.date || !form.time) {
+      setMessage("Preencha cliente, servico, data e horario.");
+      return;
+    }
+    if (Number(form.value) <= 0) {
+      setMessage("Informe um valor maior que zero.");
+      return;
+    }
     const client = clients.find(item => item.id === form.clientId) || firstClient;
     const service = services.find(item => item.id === form.serviceId) || firstService;
 
@@ -83,6 +92,7 @@ export default function NewAppointmentModal({ appointment, clients, services, de
           </button>
         </div>
         <div className="space-y-3">
+          {message && <p className="text-amber-400 text-xs">{message}</p>}
           <div>
             <label className="text-xs text-zinc-400 mb-1 block">Cliente</label>
             <select value={form.clientId} onChange={event => update("clientId", event.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-[#e91e8c]">

@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import { ArrowLeft, Phone, Calendar, DollarSign, Plus } from "lucide-react";
 import Link from "next/link";
 import { formatCurrency, formatDate, daysSince } from "@/lib/utils";
@@ -8,6 +9,7 @@ import { useAppData } from "@/context/AppDataContext";
 
 export default function ClientProfile({ clientId }: { clientId: string }) {
   const { clients, appointments, registerClientPayment } = useAppData();
+  const [message, setMessage] = useState("");
   const client = clients.find(c => c.id === clientId);
   if (!client) return <div className="p-6 text-zinc-400">Cliente nao encontrada</div>;
 
@@ -68,12 +70,16 @@ export default function ClientProfile({ clientId }: { clientId: string }) {
           <Plus size={16} /> Atendimento
         </Link>
         <button
-          onClick={() => registerClientPayment(client.id, 100, `Pagamento avulso - ${client.name}`)}
+          onClick={() => {
+            registerClientPayment(client.id, 100, `Pagamento avulso - ${client.name}`);
+            setMessage("Pagamento registrado.");
+          }}
           className="flex items-center justify-center gap-2 bg-zinc-800 text-white py-3 rounded-xl text-sm font-medium"
         >
           <DollarSign size={16} /> Registrar pagamento
         </button>
       </div>
+      {message && <p className="px-4 pb-3 -mt-2 text-emerald-400 text-xs">{message}</p>}
 
       {/* Info */}
       <div className="px-4 py-4 space-y-4 border-b border-zinc-800">

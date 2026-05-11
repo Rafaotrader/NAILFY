@@ -20,7 +20,9 @@ interface AppDataContextValue extends AppDataState {
   updateAppointmentStatus: (appointmentId: string, status: AppointmentStatus) => void;
   updatePaymentStatus: (appointmentId: string, paymentStatus: PaymentStatus) => void;
   addTransaction: (transaction: Omit<Transaction, "id">) => Transaction;
+  addProduct: (product: Omit<Product, "id">) => Product;
   registerClientPayment: (clientId: string, value: number, description?: string) => void;
+  resetDemoData: () => void;
 }
 
 const STORAGE_KEY = "nailfy.mvp.state";
@@ -216,6 +218,11 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       updateState(current => ({ ...current, transactions: [transaction, ...current.transactions] }));
       return transaction;
     },
+    addProduct(input) {
+      const product = { ...input, id: makeId("product") };
+      updateState(current => ({ ...current, products: [product, ...current.products] }));
+      return product;
+    },
     registerClientPayment(clientId, value, description = "Pagamento avulso") {
       const client = state.clients.find(item => item.id === clientId);
       if (!client) return;
@@ -234,6 +241,10 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
         transactions: [tx, ...current.transactions],
         clients: current.clients.map(item => item.id === clientId ? { ...item, totalSpent: item.totalSpent + value } : item),
       }));
+    },
+    resetDemoData() {
+      window.localStorage.removeItem(STORAGE_KEY);
+      setState(initialState);
     },
   }), [state]);
 

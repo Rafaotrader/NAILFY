@@ -1,10 +1,12 @@
 "use client";
+import { useState } from "react";
 import { Instagram, Phone, ExternalLink, Copy } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { useAppData } from "@/context/AppDataContext";
 
 export default function MeuLinkView() {
   const { services } = useAppData();
+  const [copied, setCopied] = useState(false);
   const profileUrl = "nailfy.com/beatriznails";
 
   return (
@@ -12,10 +14,16 @@ export default function MeuLinkView() {
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-xl font-bold">Meu Link</h1>
         <button
-          onClick={() => navigator.clipboard.writeText(profileUrl)}
+          onClick={async () => {
+            if (navigator.clipboard?.writeText) {
+              await navigator.clipboard.writeText(profileUrl);
+            }
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+          }}
           className="flex items-center gap-1.5 bg-zinc-800 text-zinc-300 px-3 py-2 rounded-xl text-sm"
         >
-          <Copy size={14} /> Copiar link
+          <Copy size={14} /> {copied ? "Copiado" : "Copiar link"}
         </button>
       </div>
 

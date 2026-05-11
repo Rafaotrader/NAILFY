@@ -21,6 +21,7 @@ export default function ClientesView() {
   const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] = useState("Todas");
   const [showModal, setShowModal] = useState(false);
+  const [message, setMessage] = useState("");
   const [form, setForm] = useState({ name: "", phone: "", email: "", instagram: "", status: "Nova" as ClientStatus, preferences: "" });
 
   const filtered = clients.filter(c => {
@@ -115,18 +116,23 @@ export default function ClientesView() {
           <form
             onSubmit={event => {
               event.preventDefault();
-              if (!form.name.trim() || !form.phone.trim()) return;
+              if (!form.name.trim() || !form.phone.trim()) {
+                setMessage("Informe nome e telefone da cliente.");
+                return;
+              }
               addClient(form);
               setForm({ name: "", phone: "", email: "", instagram: "", status: "Nova", preferences: "" });
+              setMessage("Cliente cadastrada.");
               setShowModal(false);
             }}
-            className="relative w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-t-3xl p-6 space-y-4"
+            className="relative w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-t-3xl p-6 space-y-4 max-h-[85vh] overflow-y-auto"
           >
             <div className="flex items-center justify-between">
               <h2 className="font-bold text-lg">Nova cliente</h2>
               <button type="button" onClick={() => setShowModal(false)}><X size={20} className="text-zinc-400" /></button>
             </div>
             <div className="space-y-3">
+              {message && <p className="text-amber-400 text-xs">{message}</p>}
               <input required placeholder="Nome" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-[#e91e8c]" />
               <input required placeholder="Telefone" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-[#e91e8c]" />
               <input placeholder="E-mail" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-[#e91e8c]" />
