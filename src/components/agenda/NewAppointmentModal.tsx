@@ -1,23 +1,25 @@
 "use client";
 import { FormEvent, useMemo, useState } from "react";
 import { X } from "lucide-react";
-import { mockClients, mockServices } from "@/data/mockData";
-import type { Appointment } from "@/types";
+import type { Appointment, Client, Service } from "@/types";
 
 type AppointmentForm = Omit<Appointment, "id" | "clientName" | "serviceName" | "duration">;
 
 interface NewAppointmentModalProps {
   appointment?: Appointment;
+  clients: Client[];
+  services: Service[];
   defaultDate: string;
+  defaultClientId?: string;
   onClose: () => void;
   onSave: (appointment: Appointment) => void;
 }
 
-export default function NewAppointmentModal({ appointment, defaultDate, onClose, onSave }: NewAppointmentModalProps) {
-  const firstClient = mockClients[0];
-  const firstService = mockServices[0];
+export default function NewAppointmentModal({ appointment, clients, services, defaultDate, defaultClientId, onClose, onSave }: NewAppointmentModalProps) {
+  const firstClient = clients[0];
+  const firstService = services[0];
   const [form, setForm] = useState<AppointmentForm>({
-    clientId: appointment?.clientId || firstClient.id,
+    clientId: appointment?.clientId || defaultClientId || firstClient.id,
     serviceId: appointment?.serviceId || firstService.id,
     date: appointment?.date || defaultDate,
     time: appointment?.time || "09:00",
@@ -30,8 +32,8 @@ export default function NewAppointmentModal({ appointment, defaultDate, onClose,
   });
 
   const selectedService = useMemo(
-    () => mockServices.find(service => service.id === form.serviceId) || firstService,
-    [form.serviceId, firstService]
+    () => services.find(service => service.id === form.serviceId) || firstService,
+    [form.serviceId, firstService, services]
   );
 
   function update<K extends keyof AppointmentForm>(key: K, value: AppointmentForm[K]) {
@@ -39,7 +41,7 @@ export default function NewAppointmentModal({ appointment, defaultDate, onClose,
   }
 
   function handleServiceChange(serviceId: string) {
-    const service = mockServices.find(item => item.id === serviceId) || firstService;
+    const service = services.find(item => item.id === serviceId) || firstService;
     setForm(current => ({
       ...current,
       serviceId,
@@ -49,8 +51,8 @@ export default function NewAppointmentModal({ appointment, defaultDate, onClose,
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const client = mockClients.find(item => item.id === form.clientId) || firstClient;
-    const service = mockServices.find(item => item.id === form.serviceId) || firstService;
+    const client = clients.find(item => item.id === form.clientId) || firstClient;
+    const service = services.find(item => item.id === form.serviceId) || firstService;
 
     onSave({
       id: appointment?.id || `apt-${Date.now()}`,
@@ -84,13 +86,13 @@ export default function NewAppointmentModal({ appointment, defaultDate, onClose,
           <div>
             <label className="text-xs text-zinc-400 mb-1 block">Cliente</label>
             <select value={form.clientId} onChange={event => update("clientId", event.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-[#e91e8c]">
-              {mockClients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+              {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
           </div>
           <div>
             <label className="text-xs text-zinc-400 mb-1 block">Servico</label>
             <select value={form.serviceId} onChange={event => handleServiceChange(event.target.value)} className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-[#e91e8c]">
-              {mockServices.map(s => <option key={s.id} value={s.id}>{s.name} - R${s.price}</option>)}
+              {services.map(s => <option key={s.id} value={s.id}>{s.name} - R${s.price}</option>)}
             </select>
           </div>
           <div className="grid grid-cols-2 gap-3">

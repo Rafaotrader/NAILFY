@@ -1,11 +1,12 @@
 "use client";
 import { Plus, AlertTriangle, Package } from "lucide-react";
-import { mockProducts } from "@/data/mockData";
 import { formatCurrency } from "@/lib/utils";
 import { cn } from "@/lib/utils";
+import { useAppData } from "@/context/AppDataContext";
 
 export default function EstoqueView() {
-  const lowStock = mockProducts.filter(p => p.quantity <= p.minStock);
+  const { products } = useAppData();
+  const lowStock = products.filter(p => p.quantity <= p.minStock);
 
   return (
     <div className="px-4 pt-6 pb-4">
@@ -24,7 +25,7 @@ export default function EstoqueView() {
       )}
 
       <div className="space-y-2">
-        {mockProducts.map(product => {
+        {products.map(product => {
           const isLow = product.quantity <= product.minStock;
           return (
             <div key={product.id} className={cn("bg-zinc-900 border rounded-2xl p-4", isLow ? "border-amber-500/40" : "border-zinc-800")}>

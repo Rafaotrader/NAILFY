@@ -1,27 +1,30 @@
 "use client";
 import { useState } from "react";
 import { CalendarCheck, Bell, Heart, DollarSign, Star, Gift, MessageCircle, Sparkles, X, Copy, ExternalLink, LucideIcon } from "lucide-react";
-import { messageFlows, mockClients } from "@/data/mockData";
-import { openWhatsApp } from "@/lib/whatsapp";
+import { useAppData } from "@/context/AppDataContext";
+import { generateWhatsAppLink } from "@/lib/whatsapp";
 
 const iconMap: Record<string, LucideIcon> = {
   CalendarCheck, Bell, Heart, DollarSign, Star, Gift, MessageCircle, Sparkles,
 };
 
 export default function MensagensView() {
+  const { messages, clients, appointments } = useAppData();
   const [selected, setSelected] = useState<string | null>(null);
-  const [selectedClient, setSelectedClient] = useState(mockClients[0]);
+  const [selectedClientId, setSelectedClientId] = useState(clients[0]?.id || "");
   const [copied, setCopied] = useState(false);
 
-  const flow = messageFlows.find(m => m.id === selected);
+  const selectedClient = clients.find(c => c.id === selectedClientId) || clients[0];
+  const lastAppointment = appointments.filter(item => item.clientId === selectedClient?.id).sort((a, b) => b.date.localeCompare(a.date))[0];
+  const flow = messages.find(m => m.id === selected);
   const message = flow
     ? flow.template({
-        clientName: selectedClient.name.split(" ")[0],
-        date: "11/05/2026",
-        time: "09:00",
-        service: "Gel alongamento",
-        value: "50",
-        days: "28",
+        clientName: selectedClient?.name.split(" ")[0],
+        date: lastAppointment?.date.split("-").reverse().join("/") || "11/05/2026",
+        time: lastAppointment?.time || "09:00",
+        service: lastAppointment?.serviceName || "atendimento",
+        value: String(lastAppointment?.signalValue || 50),
+        days: selectedClient ? String(Math.max(0, Math.floor((Date.now() - new Date(selectedClient.lastVisit).getTime()) / 86400000))) : "21",
       })
     : "";
 
@@ -42,17 +45,17 @@ export default function MensagensView() {
       <div className="mb-4">
         <label className="text-xs text-zinc-400 mb-1.5 block">Para qual cliente?</label>
         <select
-          value={selectedClient.id}
-          onChange={e => setSelectedClient(mockClients.find(c => c.id === e.target.value) || mockClients[0])}
+          value={selectedClient?.id || ""}
+          onChange={e => setSelectedClientId(e.target.value)}
           className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-[#e91e8c]"
         >
-          {mockClients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+          {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
       </div>
 
       {/* Flow list */}
       <div className="space-y-2">
-        {messageFlows.map(flow => {
+        {messages.map(flow => {
           const Icon = iconMap[flow.icon] || MessageCircle;
           return (
             <button
@@ -91,12 +94,14 @@ export default function MensagensView() {
               >
                 <Copy size={16} /> {copied ? "Copiado!" : "Copiar"}
               </button>
-              <button
-                onClick={() => openWhatsApp(selectedClient.phone, message)}
+              <a
+                href={selectedClient ? generateWhatsAppLink(selectedClient.phone, message) : "#"}
+                target="_blank"
+                rel="noreferrer"
                 className="flex-1 flex items-center justify-center gap-2 bg-emerald-600 text-white py-3 rounded-xl text-sm font-medium"
               >
                 <ExternalLink size={16} /> Enviar no WhatsApp
-              </button>
+              </a>
             </div>
           </div>
         </div>

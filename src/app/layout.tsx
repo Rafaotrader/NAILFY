@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { AppDataProvider } from "@/context/AppDataContext";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -16,7 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="pt-BR">
       <body className="bg-[#0a0a0a] text-white min-h-screen">
-        {children}
+        <AppDataProvider>{children}</AppDataProvider>
       </body>
     </html>
   );

@@ -1,16 +1,17 @@
 "use client";
-import { ArrowLeft, Phone, Calendar } from "lucide-react";
+import { ArrowLeft, Phone, Calendar, DollarSign, Plus } from "lucide-react";
 import Link from "next/link";
-import { mockClients, mockAppointments } from "@/data/mockData";
 import { formatCurrency, formatDate, daysSince } from "@/lib/utils";
 import Badge from "@/components/ui/Badge";
 import { openWhatsApp } from "@/lib/whatsapp";
+import { useAppData } from "@/context/AppDataContext";
 
 export default function ClientProfile({ clientId }: { clientId: string }) {
-  const client = mockClients.find(c => c.id === clientId);
+  const { clients, appointments, registerClientPayment } = useAppData();
+  const client = clients.find(c => c.id === clientId);
   if (!client) return <div className="p-6 text-zinc-400">Cliente nao encontrada</div>;
 
-  const history = mockAppointments.filter(a => a.clientId === clientId).sort((a, b) => b.date.localeCompare(a.date));
+  const history = appointments.filter(a => a.clientId === clientId).sort((a, b) => b.date.localeCompare(a.date));
 
   return (
     <div className="pb-4">
@@ -60,9 +61,18 @@ export default function ClientProfile({ clientId }: { clientId: string }) {
         >
           <Phone size={16} /> Chamar no WhatsApp
         </button>
-        <Link href="/agenda" className="flex items-center justify-center gap-2 bg-[#e91e8c] text-white py-3 rounded-xl text-sm font-medium">
+        <Link href={`/agenda?clientId=${client.id}`} className="flex items-center justify-center gap-2 bg-[#e91e8c] text-white py-3 rounded-xl text-sm font-medium">
           <Calendar size={16} /> Agendar retorno
         </Link>
+        <Link href={`/agenda?clientId=${client.id}`} className="flex items-center justify-center gap-2 bg-zinc-800 text-white py-3 rounded-xl text-sm font-medium">
+          <Plus size={16} /> Atendimento
+        </Link>
+        <button
+          onClick={() => registerClientPayment(client.id, 100, `Pagamento avulso - ${client.name}`)}
+          className="flex items-center justify-center gap-2 bg-zinc-800 text-white py-3 rounded-xl text-sm font-medium"
+        >
+          <DollarSign size={16} /> Registrar pagamento
+        </button>
       </div>
 
       {/* Info */}

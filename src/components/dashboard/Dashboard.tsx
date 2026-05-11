@@ -1,24 +1,26 @@
 "use client";
 import { Calendar, DollarSign, RefreshCw, Clock } from "lucide-react";
 import Link from "next/link";
-import { mockAppointments, mockClients, mockTransactions } from "@/data/mockData";
 import { formatCurrency, daysSince } from "@/lib/utils";
 import StatCard from "@/components/ui/StatCard";
 import Badge from "@/components/ui/Badge";
+import { useAppData } from "@/context/AppDataContext";
 
 const today = "2026-05-11";
 
 export default function Dashboard() {
-  const todayApts = mockAppointments.filter(a => a.date === today);
+  const { appointments, clients, transactions } = useAppData();
+  const todayApts = appointments.filter(a => a.date === today);
   const todayRevenue = todayApts.reduce((sum, a) => sum + a.value, 0);
-  const pendingPayments = mockAppointments.filter(a => a.paymentStatus === "Pendente" && a.status === "Concluido").length;
-  const returnsNeeded = mockClients.filter(c => daysSince(c.lastVisit) >= 21).length;
-  const monthlyRevenue = mockTransactions
+  const pendingPayments = appointments.filter(a => a.paymentStatus === "Pendente" && a.status !== "Cancelado").length;
+  const returnsNeeded = clients.filter(c => daysSince(c.lastVisit) >= 21 || (c.nextReturn && c.nextReturn <= today)).length;
+  const monthlyRevenue = transactions
     .filter(t => (t.type === "Entrada" || t.type === "Sinal" || t.type === "Pagamento recebido") && t.date.startsWith("2026-05"))
     .reduce((s, t) => s + t.value, 0);
-  const completed = mockAppointments.filter(a => a.status === "Concluido");
+  const completed = appointments.filter(a => a.status === "Concluido");
   const avgTicket = completed.length ? completed.reduce((sum, item) => sum + item.value, 0) / completed.length : 0;
-  const returnRate = 83;
+  const monthAppointments = appointments.filter(item => item.date.startsWith("2026-05"));
+  const returnRate = clients.length ? Math.round((clients.filter(client => client.visits > 1).length / clients.length) * 100) : 0;
 
   return (
     <div className="px-4 pt-6 pb-4 space-y-6">
@@ -55,6 +57,10 @@ export default function Dashboard() {
           <p className="text-zinc-400 text-xs">Taxa retorno</p>
         </div>
       </div>
+      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-3 text-center">
+        <p className="text-[#e91e8c] font-bold text-lg">{monthAppointments.length}</p>
+        <p className="text-zinc-400 text-xs">Atendimentos no mes</p>
+      </div>
 
       <div>
         <div className="flex items-center justify-between mb-3">
@@ -90,7 +96,7 @@ export default function Dashboard() {
           <Link href="/clientes" className="text-[#e91e8c] text-xs">Ver todas</Link>
         </div>
         <div className="space-y-2">
-          {mockClients
+          {clients
             .filter(c => daysSince(c.lastVisit) >= 21)
             .slice(0, 3)
             .map(client => (

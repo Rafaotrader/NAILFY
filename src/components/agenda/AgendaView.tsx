@@ -1,11 +1,13 @@
 "use client";
 import { useState } from "react";
-import { Plus, ChevronLeft, ChevronRight, Phone, CheckCircle, DollarSign, X, Pencil } from "lucide-react";
-import { mockAppointments, mockClients } from "@/data/mockData";
+import { useSearchParams } from "next/navigation";
+import { Plus, ChevronLeft, ChevronRight, Phone, CheckCircle, DollarSign, X, Pencil, RotateCcw } from "lucide-react";
 import { formatCurrency, cn } from "@/lib/utils";
 import Badge from "@/components/ui/Badge";
 import NewAppointmentModal from "./NewAppointmentModal";
 import type { Appointment } from "@/types";
+import { useAppData } from "@/context/AppDataContext";
+import { generateWhatsAppLink } from "@/lib/whatsapp";
 
 const today = "2026-05-11";
 
@@ -13,7 +15,8 @@ const DAYS_PT = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
 const MONTHS_PT = ["Janeiro", "Fevereiro", "Marco", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
 export default function AgendaView() {
-  const [appointments, setAppointments] = useState<Appointment[]>(mockAppointments);
+  const searchParams = useSearchParams();
+  const { appointments, clients, services, upsertAppointment, updateAppointmentStatus, updatePaymentStatus } = useAppData();
   const [selectedDate, setSelectedDate] = useState(today);
   const [editingAppointment, setEditingAppointment] = useState<Appointment | undefined>();
   const [showModal, setShowModal] = useState(false);
@@ -42,7 +45,7 @@ export default function AgendaView() {
   }
 
   function getClientPhone(clientId: string) {
-    const client = mockClients.find(c => c.id === clientId);
+    const client = clients.find(c => c.id === clientId);
     return client?.phone || "";
   }
 
@@ -57,10 +60,7 @@ export default function AgendaView() {
   }
 
   function saveAppointment(appointment: Appointment) {
-    setAppointments(current => {
-      const exists = current.some(item => item.id === appointment.id);
-      return exists ? current.map(item => item.id === appointment.id ? appointment : item) : [...current, appointment];
-    });
+    upsertAppointment(appointment);
     setSelectedDate(appointment.date);
     setShowModal(false);
     setEditingAppointment(undefined);
@@ -143,7 +143,7 @@ export default function AgendaView() {
                 </div>
                 <div className="flex gap-2 flex-wrap">
                   <a
-                    href={`https://wa.me/55${getClientPhone(apt.clientId)}?text=${encodeURIComponent(`Oi ${apt.clientName.split(" ")[0]}! Passando para confirmar seu horario de ${apt.serviceName} as ${apt.time}. Confirma?`)}`}
+                    href={generateWhatsAppLink(getClientPhone(apt.clientId), `Oi ${apt.clientName.split(" ")[0]}! Passando para confirmar seu horario de ${apt.serviceName} as ${apt.time}. Confirma?`)}
                     target="_blank"
                     rel="noreferrer"
                     className="flex items-center gap-1 bg-emerald-600 text-white text-xs px-2.5 py-1.5 rounded-xl"
@@ -153,13 +153,22 @@ export default function AgendaView() {
                   <button onClick={() => openEditModal(apt)} className="flex items-center gap-1 bg-zinc-800 text-zinc-300 text-xs px-2.5 py-1.5 rounded-xl">
                     <Pencil size={12} /> Editar
                   </button>
-                  <button onClick={() => saveAppointment({ ...apt, status: "Confirmado" })} className="flex items-center gap-1 bg-zinc-800 text-zinc-300 text-xs px-2.5 py-1.5 rounded-xl">
+                  <button onClick={() => updateAppointmentStatus(apt.id, "Confirmado")} className="flex items-center gap-1 bg-zinc-800 text-zinc-300 text-xs px-2.5 py-1.5 rounded-xl">
                     <CheckCircle size={12} /> Confirmar
                   </button>
-                  <button onClick={() => saveAppointment({ ...apt, paymentStatus: "Pago" })} className="flex items-center gap-1 bg-zinc-800 text-zinc-300 text-xs px-2.5 py-1.5 rounded-xl">
+                  <button onClick={() => updatePaymentStatus(apt.id, "Pago")} className="flex items-center gap-1 bg-zinc-800 text-zinc-300 text-xs px-2.5 py-1.5 rounded-xl">
                     <DollarSign size={12} /> Pago
                   </button>
-                  <button onClick={() => saveAppointment({ ...apt, status: "Cancelado" })} className="flex items-center gap-1 bg-zinc-800 text-zinc-300 text-xs px-2.5 py-1.5 rounded-xl">
+                  <button onClick={() => updateAppointmentStatus(apt.id, "Concluido")} className="flex items-center gap-1 bg-zinc-800 text-zinc-300 text-xs px-2.5 py-1.5 rounded-xl">
+                    <CheckCircle size={12} /> Concluir
+                  </button>
+                  <button onClick={() => updateAppointmentStatus(apt.id, "Faltou")} className="flex items-center gap-1 bg-zinc-800 text-zinc-300 text-xs px-2.5 py-1.5 rounded-xl">
+                    <X size={12} /> Faltou
+                  </button>
+                  <button onClick={() => openEditModal({ ...apt, date: selectedDate })} className="flex items-center gap-1 bg-zinc-800 text-zinc-300 text-xs px-2.5 py-1.5 rounded-xl">
+                    <RotateCcw size={12} /> Remarcar
+                  </button>
+                  <button onClick={() => updateAppointmentStatus(apt.id, "Cancelado")} className="flex items-center gap-1 bg-zinc-800 text-zinc-300 text-xs px-2.5 py-1.5 rounded-xl">
                     <X size={12} /> Cancelar
                   </button>
                 </div>
@@ -172,7 +181,10 @@ export default function AgendaView() {
       {showModal && (
         <NewAppointmentModal
           appointment={editingAppointment}
+          clients={clients}
+          services={services}
           defaultDate={selectedDate}
+          defaultClientId={searchParams.get("clientId") || undefined}
           onClose={() => {
             setShowModal(false);
             setEditingAppointment(undefined);

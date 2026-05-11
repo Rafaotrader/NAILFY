@@ -1,9 +1,10 @@
 "use client";
 import { Instagram, Phone, ExternalLink, Copy } from "lucide-react";
-import { mockServices } from "@/data/mockData";
 import { formatCurrency } from "@/lib/utils";
+import { useAppData } from "@/context/AppDataContext";
 
 export default function MeuLinkView() {
+  const { services } = useAppData();
   const profileUrl = "nailfy.com/beatriznails";
 
   return (
@@ -38,7 +39,7 @@ export default function MeuLinkView() {
         <div className="p-4">
           <h3 className="font-semibold text-sm mb-3">Servicos</h3>
           <div className="space-y-2">
-            {mockServices.slice(0, 4).map(s => (
+            {services.slice(0, 4).map(s => (
               <div key={s.id} className="flex items-center justify-between py-1.5 border-b border-zinc-800 last:border-0">
                 <span className="text-sm text-zinc-200">{s.name}</span>
                 <span className="text-[#e91e8c] font-medium text-sm">{formatCurrency(s.price)}</span>
