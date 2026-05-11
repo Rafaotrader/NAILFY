@@ -39,7 +39,7 @@ export default function MensagensView() {
   return (
     <div className="px-4 pt-6 pb-4">
       <h1 className="text-xl font-bold mb-1">Mensagens</h1>
-      <p className="text-zinc-400 text-sm mb-4">Envie mensagens prontas para suas clientes via WhatsApp</p>
+      <p className="text-zinc-400 text-sm mb-4">Sua maquina de retorno e relacionamento pelo WhatsApp.</p>
 
       {/* Client selector */}
       <div className="mb-4">

@@ -139,6 +139,14 @@ export const messageFlows: MessageFlow[] = [
       `Oi ${clientName || "linda"}! Tudo bem? Passando para confirmar seu horario de ${service || "atendimento"} no dia ${date || "..."} as ${time || "..."}. Confirma?`,
   },
   {
+    id: "m4",
+    name: "Cobranca de sinal",
+    description: "Solicitar pagamento do sinal para garantir o horario",
+    icon: "DollarSign",
+    template: ({ clientName, value, date }) =>
+      `Oi ${clientName || "linda"}! Para reservar seu horario no dia ${date || "..."}, preciso do sinal de R$${value || "50,00"}. Pode ser por Pix. Me avisa quando enviar?`,
+  },
+  {
     id: "m2",
     name: "Lembrete de manutencao",
     description: "Avisar que esta na hora de fazer a manutencao",
@@ -153,14 +161,6 @@ export const messageFlows: MessageFlow[] = [
     icon: "Heart",
     template: ({ clientName }) =>
       `Oi ${clientName || "linda"}! Saudade de voce por aqui! Que tal renovar as unhas? Tenho horarios disponiveis essa semana. Me chama!`,
-  },
-  {
-    id: "m4",
-    name: "Cobranca de sinal",
-    description: "Solicitar pagamento do sinal para garantir o horario",
-    icon: "DollarSign",
-    template: ({ clientName, value, date }) =>
-      `Oi ${clientName || "linda"}! Para garantir seu horario no dia ${date || "..."}, preciso do sinal de R$${value || "50,00"}. Pode ser via Pix! Chave: tradegenteboa@gmail.com`,
   },
   {
     id: "m5",

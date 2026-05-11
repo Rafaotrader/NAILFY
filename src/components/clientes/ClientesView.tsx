@@ -9,11 +9,11 @@ import { useAppData } from "@/context/AppDataContext";
 
 const filters: { label: string; status?: ClientStatus }[] = [
   { label: "Todas" },
-  { label: "VIP", status: "VIP" },
   { label: "Ativas", status: "Ativa" },
-  { label: "Novas", status: "Nova" },
-  { label: "Sumidas", status: "Sumida" },
+  { label: "VIPs", status: "VIP" },
   { label: "Leads", status: "Lead" },
+  { label: "Sumidas", status: "Sumida" },
+  { label: "Retorno" },
 ];
 
 export default function ClientesView() {
@@ -26,7 +26,12 @@ export default function ClientesView() {
 
   const filtered = clients.filter(c => {
     const matchSearch = c.name.toLowerCase().includes(search.toLowerCase()) || c.phone.includes(search);
-    const matchFilter = activeFilter === "Todas" || c.status === activeFilter || (activeFilter === "Ativas" && c.status === "Ativa");
+    const matchFilter =
+      activeFilter === "Todas" ||
+      c.status === activeFilter ||
+      (activeFilter === "Ativas" && c.status === "Ativa") ||
+      (activeFilter === "VIPs" && c.status === "VIP") ||
+      (activeFilter === "Retorno" && (daysSince(c.lastVisit) >= 21 || Boolean(c.nextReturn)));
     return matchSearch && matchFilter;
   });
 
@@ -40,7 +45,10 @@ export default function ClientesView() {
   return (
     <div className="px-4 pt-6 pb-4">
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-bold">Clientes</h1>
+        <div>
+          <h1 className="text-xl font-bold">Clientes</h1>
+          <p className="text-zinc-400 text-sm">Veja quem compra, quem voltou e quem precisa de carinho.</p>
+        </div>
         <button onClick={() => setShowModal(true)} className="flex items-center gap-1.5 bg-[#e91e8c] text-white px-3 py-2 rounded-xl text-sm font-medium">
           <Plus size={16} /> Cadastrar
         </button>
@@ -98,6 +106,7 @@ export default function ClientesView() {
                   <Badge label={client.status} />
                 </div>
                 <p className="text-zinc-400 text-xs">{client.visits} visitas - Ultima: {formatDate(client.lastVisit)}</p>
+                {client.nextReturn && <p className="text-zinc-500 text-xs">Proximo retorno: {formatDate(client.nextReturn)}</p>}
               </div>
               <div className="text-right flex-shrink-0">
                 <p className="text-white text-sm font-medium">{formatCurrency(client.totalSpent)}</p>

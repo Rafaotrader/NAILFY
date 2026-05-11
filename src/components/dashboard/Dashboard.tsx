@@ -1,5 +1,5 @@
 "use client";
-import { Calendar, DollarSign, RefreshCw, Clock } from "lucide-react";
+import { Calendar, DollarSign, RefreshCw, Clock, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import { formatCurrency, daysSince } from "@/lib/utils";
 import StatCard from "@/components/ui/StatCard";
@@ -13,7 +13,8 @@ export default function Dashboard() {
   const todayApts = appointments.filter(a => a.date === today);
   const todayRevenue = todayApts.reduce((sum, a) => sum + a.value, 0);
   const pendingPayments = appointments.filter(a => a.paymentStatus === "Pendente" && a.status !== "Cancelado").length;
-  const returnsNeeded = clients.filter(c => daysSince(c.lastVisit) >= 21 || (c.nextReturn && c.nextReturn <= today)).length;
+  const clientsToCall = clients.filter(c => daysSince(c.lastVisit) >= 21 || (c.nextReturn && c.nextReturn <= today));
+  const returnsNeeded = clientsToCall.length;
   const monthlyRevenue = transactions
     .filter(t => (t.type === "Entrada" || t.type === "Sinal" || t.type === "Pagamento recebido") && t.date.startsWith("2026-05"))
     .reduce((s, t) => s + t.value, 0);
@@ -25,22 +26,18 @@ export default function Dashboard() {
   return (
     <div className="px-4 pt-6 pb-4 space-y-6">
       <div>
-        <p className="text-zinc-400 text-sm">Bom dia</p>
-        <h1 className="text-2xl font-bold">Ola, Beatriz</h1>
+        <p className="text-zinc-400 text-sm">Painel da Beatriz Nails</p>
+        <h1 className="text-2xl font-bold">Hoje voce tem {todayApts.length} atendimentos e {formatCurrency(todayRevenue)} previstos.</h1>
         <p className="text-zinc-300 text-sm mt-1">
-          Hoje voce tem{" "}
-          <span className="text-[#e91e8c] font-semibold">{todayApts.length} atendimentos</span>{" "}
-          e{" "}
-          <span className="text-[#e91e8c] font-semibold">{formatCurrency(todayRevenue)}</span>{" "}
-          previstos.
+          Veja quem atender, quem chamar e quanto ainda tem para receber.
         </p>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
-        <StatCard icon={Calendar} label="Atendimentos hoje" value={todayApts.length} sub="agendados" />
-        <StatCard icon={DollarSign} label="Receita prevista" value={formatCurrency(todayRevenue)} sub="hoje" color="text-emerald-400" />
-        <StatCard icon={Clock} label="Pendentes a receber" value={pendingPayments} sub="pagamentos" color="text-amber-400" />
-        <StatCard icon={RefreshCw} label="Para retorno" value={returnsNeeded} sub="clientes" color="text-purple-400" />
+        <StatCard icon={Calendar} label="Tenho hoje" value={todayApts.length} sub="atendimentos" />
+        <StatCard icon={DollarSign} label="Previsto hoje" value={formatCurrency(todayRevenue)} sub="na agenda" color="text-emerald-400" />
+        <StatCard icon={Clock} label="A receber" value={pendingPayments} sub="pagamentos" color="text-amber-400" />
+        <StatCard icon={RefreshCw} label="Chamar hoje" value={returnsNeeded} sub="clientes" color="text-purple-400" />
       </div>
 
       <div className="grid grid-cols-3 gap-3">
@@ -92,12 +89,11 @@ export default function Dashboard() {
 
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="font-semibold text-white">Precisam de retorno</h2>
+          <h2 className="font-semibold text-white">Clientes para chamar hoje</h2>
           <Link href="/clientes" className="text-[#e91e8c] text-xs">Ver todas</Link>
         </div>
         <div className="space-y-2">
-          {clients
-            .filter(c => daysSince(c.lastVisit) >= 21)
+          {clientsToCall
             .slice(0, 3)
             .map(client => (
               <div key={client.id} className="bg-zinc-900 border border-zinc-800 rounded-2xl p-3 flex items-center gap-3">
@@ -106,7 +102,7 @@ export default function Dashboard() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-sm text-white truncate">{client.name}</p>
-                  <p className="text-zinc-400 text-xs">{daysSince(client.lastVisit)} dias sem visita</p>
+                  <p className="text-zinc-400 text-xs">{client.nextReturn && client.nextReturn <= today ? "Retorno vence hoje" : `${daysSince(client.lastVisit)} dias sem visita`}</p>
                 </div>
                 <a
                   href={`https://wa.me/55${client.phone}?text=${encodeURIComponent(`Oi ${client.name.split(" ")[0]}! Saudade de voce por aqui! Que tal renovar as unhas?`)}`}
@@ -114,10 +110,11 @@ export default function Dashboard() {
                   rel="noreferrer"
                   className="bg-emerald-600 text-white text-xs px-3 py-1.5 rounded-xl font-medium"
                 >
-                  Chamar
+                  <span className="inline-flex items-center gap-1"><MessageCircle size={12} /> Chamar</span>
                 </a>
               </div>
             ))}
+          {clientsToCall.length === 0 && <p className="text-zinc-500 text-sm text-center py-6">Nenhuma cliente pendente de retorno hoje</p>}
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Plus, ChevronLeft, ChevronRight, Phone, CheckCircle, DollarSign, X, Pencil, RotateCcw } from "lucide-react";
+import { Plus, ChevronLeft, ChevronRight, Phone, CheckCircle, DollarSign, X, MoreHorizontal, RotateCcw } from "lucide-react";
 import { formatCurrency, cn } from "@/lib/utils";
 import Badge from "@/components/ui/Badge";
 import NewAppointmentModal from "./NewAppointmentModal";
@@ -20,6 +20,7 @@ export default function AgendaView() {
   const [selectedDate, setSelectedDate] = useState(today);
   const [editingAppointment, setEditingAppointment] = useState<Appointment | undefined>();
   const [showModal, setShowModal] = useState(false);
+  const [expandedActions, setExpandedActions] = useState<string | null>(null);
   const [currentMonth, setCurrentMonth] = useState(new Date("2026-05-01"));
 
   const daysInMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0).getDate();
@@ -69,7 +70,10 @@ export default function AgendaView() {
   return (
     <div className="px-4 pt-6 pb-4">
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-bold">Agenda</h1>
+        <div>
+          <h1 className="text-xl font-bold">Agenda</h1>
+          <p className="text-zinc-400 text-sm">Organize horarios, pagamentos e retornos em poucos toques.</p>
+        </div>
         <button onClick={openCreateModal} className="flex items-center gap-1.5 bg-[#e91e8c] text-white px-3 py-2 rounded-xl text-sm font-medium active:scale-95 transition-transform">
           <Plus size={16} />
           Agendar
@@ -150,9 +154,6 @@ export default function AgendaView() {
                   >
                     <Phone size={12} /> WhatsApp
                   </a>
-                  <button onClick={() => openEditModal(apt)} className="flex items-center gap-1 bg-zinc-800 text-zinc-300 text-xs px-2.5 py-1.5 rounded-xl">
-                    <Pencil size={12} /> Editar
-                  </button>
                   <button onClick={() => updateAppointmentStatus(apt.id, "Confirmado")} className="flex items-center gap-1 bg-zinc-800 text-zinc-300 text-xs px-2.5 py-1.5 rounded-xl">
                     <CheckCircle size={12} /> Confirmar
                   </button>
@@ -162,16 +163,23 @@ export default function AgendaView() {
                   <button onClick={() => updateAppointmentStatus(apt.id, "Concluido")} className="flex items-center gap-1 bg-zinc-800 text-zinc-300 text-xs px-2.5 py-1.5 rounded-xl">
                     <CheckCircle size={12} /> Concluir
                   </button>
-                  <button onClick={() => updateAppointmentStatus(apt.id, "Faltou")} className="flex items-center gap-1 bg-zinc-800 text-zinc-300 text-xs px-2.5 py-1.5 rounded-xl">
-                    <X size={12} /> Faltou
-                  </button>
-                  <button onClick={() => openEditModal({ ...apt, date: selectedDate })} className="flex items-center gap-1 bg-zinc-800 text-zinc-300 text-xs px-2.5 py-1.5 rounded-xl">
+                  <button onClick={() => openEditModal(apt)} className="flex items-center gap-1 bg-zinc-800 text-zinc-300 text-xs px-2.5 py-1.5 rounded-xl">
                     <RotateCcw size={12} /> Remarcar
                   </button>
-                  <button onClick={() => updateAppointmentStatus(apt.id, "Cancelado")} className="flex items-center gap-1 bg-zinc-800 text-zinc-300 text-xs px-2.5 py-1.5 rounded-xl">
-                    <X size={12} /> Cancelar
+                  <button onClick={() => setExpandedActions(expandedActions === apt.id ? null : apt.id)} className="flex items-center gap-1 bg-zinc-800 text-zinc-300 text-xs px-2.5 py-1.5 rounded-xl">
+                    <MoreHorizontal size={12} /> Mais
                   </button>
                 </div>
+                {expandedActions === apt.id && (
+                  <div className="mt-2 flex gap-2 flex-wrap">
+                    <button onClick={() => updateAppointmentStatus(apt.id, "Faltou")} className="flex items-center gap-1 bg-zinc-800 text-zinc-300 text-xs px-2.5 py-1.5 rounded-xl">
+                      <X size={12} /> Cliente faltou
+                    </button>
+                    <button onClick={() => updateAppointmentStatus(apt.id, "Cancelado")} className="flex items-center gap-1 bg-zinc-800 text-zinc-300 text-xs px-2.5 py-1.5 rounded-xl">
+                      <X size={12} /> Cancelar
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
           </div>

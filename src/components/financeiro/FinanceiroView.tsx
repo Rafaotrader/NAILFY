@@ -49,7 +49,10 @@ export default function FinanceiroView() {
   return (
     <div className="px-4 pt-6 pb-4">
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-bold">Financeiro</h1>
+        <div>
+          <h1 className="text-xl font-bold">Financeiro</h1>
+          <p className="text-zinc-400 text-sm">Uma visao simples do dinheiro que entra e sai do studio.</p>
+        </div>
         <button onClick={() => setShowModal(true)} className="flex items-center gap-1.5 bg-[#e91e8c] text-white px-3 py-2 rounded-xl text-sm font-medium">
           <Plus size={16} /> Lancamento
         </button>
@@ -65,11 +68,11 @@ export default function FinanceiroView() {
           <p className="text-red-400 font-bold text-xl">{formatCurrency(monthExpenses)}</p>
         </div>
         <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4">
-          <p className="text-zinc-400 text-xs mb-1">Pendentes a receber</p>
+          <p className="text-zinc-400 text-xs mb-1">Pendentes</p>
           <p className="text-amber-400 font-bold text-xl">{formatCurrency(pendingPayments)}</p>
         </div>
         <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4">
-          <p className="text-zinc-400 text-xs mb-1">Sinais recebidos</p>
+          <p className="text-zinc-400 text-xs mb-1">Sinais</p>
           <p className="text-[#c084fc] font-bold text-xl">{formatCurrency(signals)}</p>
         </div>
       </div>
@@ -77,7 +80,7 @@ export default function FinanceiroView() {
       <div className="bg-gradient-to-r from-[#e91e8c]/20 to-purple-900/20 border border-[#e91e8c]/30 rounded-2xl p-4 mb-4">
         <p className="text-zinc-300 text-sm">Lucro estimado do mes</p>
         <p className="text-white font-bold text-2xl mt-0.5">{formatCurrency(profit)}</p>
-        <p className="text-zinc-400 text-xs mt-1">Receita menos despesas</p>
+        <p className="text-zinc-400 text-xs mt-1">Lucro estimado considera receitas e despesas cadastradas.</p>
       </div>
 
       <div className="grid grid-cols-3 gap-2 mb-4">
