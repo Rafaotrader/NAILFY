@@ -12,8 +12,8 @@ export const mockClients: Client[] = [
     visits: 18,
     lastVisit: "2026-04-28",
     nextReturn: "2026-05-26",
-    preferences: "Prefere gel transparente, não gosta de muito comprimento",
-    allergies: "Sensível a acetona",
+    preferences: "Prefere gel transparente, nao gosta de muito comprimento",
+    allergies: "Sensivel a acetona",
     instagram: "@julianasouza",
   },
   {
@@ -41,8 +41,7 @@ export const mockClients: Client[] = [
     totalSpent: 450,
     visits: 4,
     lastVisit: "2026-02-10",
-    nextReturn: undefined,
-    preferences: "Esmaltação simples, cores neutras",
+    preferences: "Esmaltacao simples, cores neutras",
     allergies: "",
   },
   {
@@ -93,8 +92,8 @@ export const mockClients: Client[] = [
 export const mockServices: Service[] = [
   { id: "s1", name: "Gel alongamento", category: "Gel", duration: 120, price: 180, estimatedCost: 40, estimatedProfit: 140, suggestedReturn: 21, active: true },
   { id: "s2", name: "Nail art", category: "Arte", duration: 90, price: 150, estimatedCost: 30, estimatedProfit: 120, suggestedReturn: 28, active: true },
-  { id: "s3", name: "Esmaltação simples", category: "Esmaltação", duration: 45, price: 60, estimatedCost: 10, estimatedProfit: 50, suggestedReturn: 14, active: true },
-  { id: "s4", name: "Manutenção gel", category: "Gel", duration: 60, price: 120, estimatedCost: 25, estimatedProfit: 95, suggestedReturn: 21, active: true },
+  { id: "s3", name: "Esmaltacao simples", category: "Esmaltacao", duration: 45, price: 60, estimatedCost: 10, estimatedProfit: 50, suggestedReturn: 14, active: true },
+  { id: "s4", name: "Manutencao gel", category: "Gel", duration: 60, price: 120, estimatedCost: 25, estimatedProfit: 95, suggestedReturn: 21, active: true },
   { id: "s5", name: "Banho de gel", category: "Gel", duration: 75, price: 140, estimatedCost: 35, estimatedProfit: 105, suggestedReturn: 21, active: true },
   { id: "s6", name: "Fibra de vidro", category: "Fibra", duration: 105, price: 160, estimatedCost: 45, estimatedProfit: 115, suggestedReturn: 21, active: true },
 ];
@@ -103,29 +102,29 @@ const today = "2026-05-11";
 
 export const mockAppointments: Appointment[] = [
   { id: "a1", clientId: "c1", clientName: "Juliana Souza", serviceId: "s1", serviceName: "Gel alongamento", date: today, time: "09:00", duration: 120, value: 180, status: "Confirmado", paymentStatus: "Pendente", signalStatus: "Pago", signalValue: 50 },
-  { id: "a2", clientId: "c2", clientName: "Mariana Lima", serviceId: "s2", serviceName: "Nail art", date: today, time: "11:00", duration: 90, value: 150, status: "Agendado", paymentStatus: "Pendente", signalStatus: "Não solicitado" },
-  { id: "a3", clientId: "c5", clientName: "Bianca Rocha", serviceId: "s4", serviceName: "Manutenção gel", date: today, time: "14:00", duration: 60, value: 120, status: "Agendado", paymentStatus: "Pendente", signalStatus: "Não solicitado" },
-  { id: "a4", clientId: "c4", clientName: "Fernanda Costa", serviceId: "s3", serviceName: "Esmaltação simples", date: today, time: "16:00", duration: 45, value: 60, status: "Agendado", paymentStatus: "Pendente", signalStatus: "Não solicitado" },
+  { id: "a2", clientId: "c2", clientName: "Mariana Lima", serviceId: "s2", serviceName: "Nail art", date: today, time: "11:00", duration: 90, value: 150, status: "Agendado", paymentStatus: "Pendente", signalStatus: "Nao solicitado" },
+  { id: "a3", clientId: "c5", clientName: "Bianca Rocha", serviceId: "s4", serviceName: "Manutencao gel", date: today, time: "14:00", duration: 60, value: 120, status: "Agendado", paymentStatus: "Pendente", signalStatus: "Nao solicitado" },
+  { id: "a4", clientId: "c4", clientName: "Fernanda Costa", serviceId: "s3", serviceName: "Esmaltacao simples", date: today, time: "16:00", duration: 45, value: 60, status: "Agendado", paymentStatus: "Pendente", signalStatus: "Nao solicitado" },
   { id: "a5", clientId: "c6", clientName: "Camila Torres", serviceId: "s5", serviceName: "Banho de gel", date: "2026-05-12", time: "10:00", duration: 75, value: 140, status: "Agendado", paymentStatus: "Pendente", signalStatus: "Solicitado" },
-  { id: "a6", clientId: "c1", clientName: "Juliana Souza", serviceId: "s4", serviceName: "Manutenção gel", date: "2026-05-13", time: "09:00", duration: 60, value: 120, status: "Agendado", paymentStatus: "Pendente", signalStatus: "Não solicitado" },
-  { id: "a7", clientId: "c2", clientName: "Mariana Lima", serviceId: "s1", serviceName: "Gel alongamento", date: "2026-05-08", time: "10:00", duration: 120, value: 180, status: "Concluído", paymentStatus: "Pago", signalStatus: "Pago", signalValue: 50 },
-  { id: "a8", clientId: "c5", clientName: "Bianca Rocha", serviceId: "s2", serviceName: "Nail art", date: "2026-05-07", time: "14:00", duration: 90, value: 150, status: "Concluído", paymentStatus: "Pendente", signalStatus: "Pago", signalValue: 50 },
+  { id: "a6", clientId: "c1", clientName: "Juliana Souza", serviceId: "s4", serviceName: "Manutencao gel", date: "2026-05-13", time: "09:00", duration: 60, value: 120, status: "Agendado", paymentStatus: "Pendente", signalStatus: "Nao solicitado" },
+  { id: "a7", clientId: "c2", clientName: "Mariana Lima", serviceId: "s1", serviceName: "Gel alongamento", date: "2026-05-08", time: "10:00", duration: 120, value: 180, status: "Concluido", paymentStatus: "Pago", signalStatus: "Pago", signalValue: 50 },
+  { id: "a8", clientId: "c5", clientName: "Bianca Rocha", serviceId: "s2", serviceName: "Nail art", date: "2026-05-07", time: "14:00", duration: 90, value: 150, status: "Concluido", paymentStatus: "Pendente", signalStatus: "Pago", signalValue: 50 },
 ];
 
 export const mockTransactions: Transaction[] = [
-  { id: "t1", type: "Entrada", category: "Serviço", description: "Gel alongamento - Mariana Lima", value: 180, date: "2026-05-08", clientId: "c2", clientName: "Mariana Lima" },
+  { id: "t1", type: "Entrada", category: "Servico", description: "Gel alongamento - Mariana Lima", value: 180, date: "2026-05-08", clientId: "c2", clientName: "Mariana Lima" },
   { id: "t2", type: "Despesa", category: "Material", description: "Gel UV Rosa Nude 30ml", value: 85, date: "2026-05-07" },
-  { id: "t3", type: "Sinal", category: "Serviço", description: "Sinal - Juliana Souza (Gel alongamento)", value: 50, date: "2026-05-06", clientId: "c1", clientName: "Juliana Souza" },
+  { id: "t3", type: "Sinal", category: "Servico", description: "Sinal - Juliana Souza (Gel alongamento)", value: 50, date: "2026-05-06", clientId: "c1", clientName: "Juliana Souza" },
   { id: "t4", type: "Despesa", category: "Marketing", description: "Impulsionamento Instagram", value: 60, date: "2026-05-05" },
-  { id: "t5", type: "Entrada", category: "Serviço", description: "Nail art - Bianca Rocha", value: 150, date: "2026-05-03", clientId: "c5", clientName: "Bianca Rocha" },
-  { id: "t6", type: "Despesa", category: "Aluguel/fixo", description: "Aluguel do espaço", value: 600, date: "2026-05-01" },
+  { id: "t5", type: "Entrada", category: "Servico", description: "Nail art - Bianca Rocha", value: 150, date: "2026-05-03", clientId: "c5", clientName: "Bianca Rocha" },
+  { id: "t6", type: "Despesa", category: "Aluguel/fixo", description: "Aluguel do espaco", value: 600, date: "2026-05-01" },
 ];
 
 export const mockProducts: Product[] = [
   { id: "p1", name: "Esmalte Vermelho", category: "Esmalte", quantity: 8, unit: "un", minStock: 3, cost: 12 },
   { id: "p2", name: "Gel UV Rosa Nude 30ml", category: "Gel", quantity: 1, unit: "un", minStock: 2, cost: 85 },
   { id: "p3", name: "Base Coat", category: "Base", quantity: 5, unit: "un", minStock: 2, cost: 22 },
-  { id: "p4", name: "Pó Acrílico Natural", category: "Acrílico", quantity: 3, unit: "g", minStock: 10, cost: 45 },
+  { id: "p4", name: "Po Acrilico Natural", category: "Acrilico", quantity: 3, unit: "g", minStock: 10, cost: 45 },
   { id: "p5", name: "Fibra de Vidro", category: "Fibra", quantity: 2, unit: "rolo", minStock: 1, cost: 35 },
   { id: "p6", name: "Primer", category: "Base", quantity: 4, unit: "un", minStock: 2, cost: 28 },
 ];
@@ -133,66 +132,66 @@ export const mockProducts: Product[] = [
 export const messageFlows: MessageFlow[] = [
   {
     id: "m1",
-    name: "Confirmação de horário",
+    name: "Confirmacao de horario",
     description: "Confirmar agendamento com a cliente",
     icon: "CalendarCheck",
     template: ({ clientName, date, time, service }) =>
-      `Oi ${clientName || "linda"}! Tudo bem? Passando para confirmar seu horário de ${service || "atendimento"} no dia ${date || "..."} às ${time || "..."}. Confirma? 💅`,
+      `Oi ${clientName || "linda"}! Tudo bem? Passando para confirmar seu horario de ${service || "atendimento"} no dia ${date || "..."} as ${time || "..."}. Confirma?`,
   },
   {
     id: "m2",
-    name: "Lembrete de manutenção",
-    description: "Avisar que está na hora de fazer a manutenção",
+    name: "Lembrete de manutencao",
+    description: "Avisar que esta na hora de fazer a manutencao",
     icon: "Bell",
     template: ({ clientName, days }) =>
-      `Oi ${clientName || "linda"}! Já faz ${days || "21"} dias desde o seu último atendimento. Está na hora de fazer a manutenção das unhas! Quer agendar? 💅✨`,
+      `Oi ${clientName || "linda"}! Ja faz ${days || "21"} dias desde o seu ultimo atendimento. Esta na hora de fazer a manutencao das unhas! Quer agendar?`,
   },
   {
     id: "m3",
-    name: "Saudade de você",
+    name: "Saudade de voce",
     description: "Reativar cliente sumida",
     icon: "Heart",
     template: ({ clientName }) =>
-      `Oi ${clientName || "linda"}! Saudade de você por aqui! Que tal renovar as unhas? Tenho horários disponíveis essa semana. Me chama! 💗`,
+      `Oi ${clientName || "linda"}! Saudade de voce por aqui! Que tal renovar as unhas? Tenho horarios disponiveis essa semana. Me chama!`,
   },
   {
     id: "m4",
-    name: "Cobrança de sinal",
-    description: "Solicitar pagamento do sinal para garantir o horário",
+    name: "Cobranca de sinal",
+    description: "Solicitar pagamento do sinal para garantir o horario",
     icon: "DollarSign",
     template: ({ clientName, value, date }) =>
-      `Oi ${clientName || "linda"}! Para garantir seu horário no dia ${date || "..."}, preciso do sinal de R$${value || "50,00"}. Pode ser via Pix! Chave: tradegenteboa@gmail.com`,
+      `Oi ${clientName || "linda"}! Para garantir seu horario no dia ${date || "..."}, preciso do sinal de R$${value || "50,00"}. Pode ser via Pix! Chave: tradegenteboa@gmail.com`,
   },
   {
     id: "m5",
-    name: "Agradecimento pós-atendimento",
-    description: "Mensagem de carinho após o atendimento",
+    name: "Agradecimento pos-atendimento",
+    description: "Mensagem de carinho apos o atendimento",
     icon: "Star",
     template: ({ clientName }) =>
-      `${clientName || "Linda"}, foi um prazer te atender! Espero que tenha amado suas unhas. Quando quiser, me chama. Qualquer dúvida, estou aqui! 💅💗`,
+      `${clientName || "Linda"}, foi um prazer te atender! Espero que tenha amado suas unhas. Quando quiser, me chama. Qualquer duvida, estou aqui!`,
   },
   {
     id: "m6",
-    name: "Feliz aniversário",
-    description: "Parabenizar a cliente no dia do aniversário",
+    name: "Feliz aniversario",
+    description: "Parabenizar a cliente no dia do aniversario",
     icon: "Gift",
     template: ({ clientName }) =>
-      `Feliz aniversário, ${clientName || "linda"}! 🎂🎉 Que seu dia seja incrível! Como presente, tenho um desconto especial esperando por você. Me chama e aproveita! 💗`,
+      `Feliz aniversario, ${clientName || "linda"}! Que seu dia seja incrivel! Como presente, tenho um desconto especial esperando por voce. Me chama e aproveita!`,
   },
   {
     id: "m7",
-    name: "Follow-up de orçamento",
-    description: "Retomar contato após envio de orçamento",
+    name: "Follow-up de orcamento",
+    description: "Retomar contato apos envio de orcamento",
     icon: "MessageCircle",
     template: ({ clientName, service }) =>
-      `Oi ${clientName || "linda"}! Passando para ver se ficou alguma dúvida sobre o orçamento de ${service || "nail art"} que te mandei. Quer agendar? 💅`,
+      `Oi ${clientName || "linda"}! Passando para ver se ficou alguma duvida sobre o orcamento de ${service || "nail art"} que te mandei. Quer agendar?`,
   },
   {
     id: "m8",
     name: "Oferta especial",
-    description: "Divulgar promoção ou novidade",
+    description: "Divulgar promocao ou novidade",
     icon: "Sparkles",
     template: ({ clientName, service, value }) =>
-      `Oi ${clientName || "linda"}! Tenho uma novidade: ${service || "nail art"} com condição especial por R$${value || "..."} essa semana. Aproveita! Me chama 💅`,
+      `Oi ${clientName || "linda"}! Tenho uma novidade: ${service || "nail art"} com condicao especial por R$${value || "..."} essa semana. Aproveita! Me chama`,
   },
 ];

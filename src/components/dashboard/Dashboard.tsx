@@ -1,8 +1,8 @@
 "use client";
-import { Calendar, DollarSign, Users, RefreshCw, TrendingUp, Clock, CheckCircle } from "lucide-react";
+import { Calendar, DollarSign, RefreshCw, Clock } from "lucide-react";
 import Link from "next/link";
 import { mockAppointments, mockClients, mockTransactions } from "@/data/mockData";
-import { formatCurrency, formatDate, daysSince } from "@/lib/utils";
+import { formatCurrency, daysSince } from "@/lib/utils";
 import StatCard from "@/components/ui/StatCard";
 import Badge from "@/components/ui/Badge";
 
@@ -11,22 +11,22 @@ const today = "2026-05-11";
 export default function Dashboard() {
   const todayApts = mockAppointments.filter(a => a.date === today);
   const todayRevenue = todayApts.reduce((sum, a) => sum + a.value, 0);
-  const pendingPayments = mockAppointments.filter(a => a.paymentStatus === "Pendente" && a.status === "Concluído").length;
+  const pendingPayments = mockAppointments.filter(a => a.paymentStatus === "Pendente" && a.status === "Concluido").length;
   const returnsNeeded = mockClients.filter(c => daysSince(c.lastVisit) >= 21).length;
-  const monthlyRevenue = mockTransactions.filter(t => t.type === "Entrada" && t.date.startsWith("2026-05")).reduce((s, t) => s + t.value, 0);
-  const avgTicket = 105;
+  const monthlyRevenue = mockTransactions
+    .filter(t => (t.type === "Entrada" || t.type === "Sinal" || t.type === "Pagamento recebido") && t.date.startsWith("2026-05"))
+    .reduce((s, t) => s + t.value, 0);
+  const completed = mockAppointments.filter(a => a.status === "Concluido");
+  const avgTicket = completed.length ? completed.reduce((sum, item) => sum + item.value, 0) / completed.length : 0;
   const returnRate = 83;
 
   return (
     <div className="px-4 pt-6 pb-4 space-y-6">
-      {/* Header */}
       <div>
         <p className="text-zinc-400 text-sm">Bom dia</p>
-        <h1 className="text-2xl font-bold">
-          Olá, Beatriz <span className="text-[#e91e8c]">✨</span>
-        </h1>
+        <h1 className="text-2xl font-bold">Ola, Beatriz</h1>
         <p className="text-zinc-300 text-sm mt-1">
-          Hoje você tem{" "}
+          Hoje voce tem{" "}
           <span className="text-[#e91e8c] font-semibold">{todayApts.length} atendimentos</span>{" "}
           e{" "}
           <span className="text-[#e91e8c] font-semibold">{formatCurrency(todayRevenue)}</span>{" "}
@@ -34,7 +34,6 @@ export default function Dashboard() {
         </p>
       </div>
 
-      {/* Stats Grid */}
       <div className="grid grid-cols-2 gap-3">
         <StatCard icon={Calendar} label="Atendimentos hoje" value={todayApts.length} sub="agendados" />
         <StatCard icon={DollarSign} label="Receita prevista" value={formatCurrency(todayRevenue)} sub="hoje" color="text-emerald-400" />
@@ -42,7 +41,6 @@ export default function Dashboard() {
         <StatCard icon={RefreshCw} label="Para retorno" value={returnsNeeded} sub="clientes" color="text-purple-400" />
       </div>
 
-      {/* Secondary Stats */}
       <div className="grid grid-cols-3 gap-3">
         <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-3 text-center">
           <p className="text-[#e91e8c] font-bold text-lg">{formatCurrency(monthlyRevenue)}</p>
@@ -58,7 +56,6 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Today's Appointments */}
       <div>
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-semibold text-white">Agenda de hoje</h2>
@@ -87,7 +84,6 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Return Reminders */}
       <div>
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-semibold text-white">Precisam de retorno</h2>
@@ -107,7 +103,7 @@ export default function Dashboard() {
                   <p className="text-zinc-400 text-xs">{daysSince(client.lastVisit)} dias sem visita</p>
                 </div>
                 <a
-                  href={`https://wa.me/55${client.phone}?text=${encodeURIComponent(`Oi ${client.name.split(" ")[0]}! Saudade de voce por aqui! Que tal renovar as unhas? 💅`)}`}
+                  href={`https://wa.me/55${client.phone}?text=${encodeURIComponent(`Oi ${client.name.split(" ")[0]}! Saudade de voce por aqui! Que tal renovar as unhas?`)}`}
                   target="_blank"
                   rel="noreferrer"
                   className="bg-emerald-600 text-white text-xs px-3 py-1.5 rounded-xl font-medium"

@@ -18,9 +18,9 @@ export interface Client {
   avatar?: string;
 }
 
-export type AppointmentStatus = "Agendado" | "Confirmado" | "Concluído" | "Cancelado" | "Faltou" | "Pendente";
+export type AppointmentStatus = "Agendado" | "Confirmado" | "Concluido" | "Cancelado" | "Faltou" | "Pendente";
 export type PaymentStatus = "Pago" | "Pendente";
-export type SignalStatus = "Não solicitado" | "Solicitado" | "Pago" | "Pendente";
+export type SignalStatus = "Nao solicitado" | "Solicitado" | "Pago" | "Pendente";
 
 export interface Appointment {
   id: string;
@@ -52,7 +52,7 @@ export interface Service {
 }
 
 export type TransactionType = "Entrada" | "Despesa" | "Sinal" | "Pagamento pendente" | "Pagamento recebido";
-export type TransactionCategory = "Material" | "Aluguel/fixo" | "Marketing" | "Curso" | "Ferramenta" | "Serviço" | "Outro";
+export type TransactionCategory = "Material" | "Aluguel/fixo" | "Marketing" | "Curso" | "Ferramenta" | "Servico" | "Outro";
 
 export interface Transaction {
   id: string;

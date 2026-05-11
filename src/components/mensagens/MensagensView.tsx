@@ -25,8 +25,10 @@ export default function MensagensView() {
       })
     : "";
 
-  function handleCopy() {
-    navigator.clipboard.writeText(message);
+  async function handleCopy() {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(message);
+    }
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }

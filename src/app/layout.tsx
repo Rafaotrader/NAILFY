@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Nailfy - Gestão para Nail Designers",
-  description: "O app de gestão para nail designers e manicures",
+  title: "Nailfy - Gestao para Nail Designers",
+  description: "O app de gestao para nail designers e manicures",
 };
 
 export const viewport: Viewport = {

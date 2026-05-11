@@ -8,7 +8,7 @@ const variants: Record<string, string> = {
   Sumida: "bg-zinc-700 text-zinc-400 border border-zinc-600",
   Confirmado: "bg-emerald-500/20 text-emerald-400",
   Agendado: "bg-blue-500/20 text-blue-400",
-  "Concluído": "bg-zinc-700 text-zinc-400",
+  Concluido: "bg-zinc-700 text-zinc-400",
   Cancelado: "bg-red-500/20 text-red-400",
   Faltou: "bg-orange-500/20 text-orange-400",
   Pendente: "bg-yellow-500/20 text-yellow-400",

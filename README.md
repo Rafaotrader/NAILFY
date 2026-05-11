@@ -10,7 +10,7 @@ npm install
 npm run dev
 ```
 
-Acesse: http://localhost:3003
+Acesse: http://localhost:3004
 
 ## Estrutura
 

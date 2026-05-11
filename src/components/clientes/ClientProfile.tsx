@@ -1,5 +1,5 @@
 "use client";
-import { ArrowLeft, Phone, Calendar, DollarSign, Star, Clock, MessageCircle, Edit, Plus } from "lucide-react";
+import { ArrowLeft, Phone, Calendar } from "lucide-react";
 import Link from "next/link";
 import { mockClients, mockAppointments } from "@/data/mockData";
 import { formatCurrency, formatDate, daysSince } from "@/lib/utils";
